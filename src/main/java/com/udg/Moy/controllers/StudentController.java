@@ -12,43 +12,42 @@ import java.util.Optional;
 @RequestMapping("/students") //localhost:8080/
 public class StudentController {
     @Autowired
-    StudentService studentService;
+    StudentService service;
     @GetMapping
     public ArrayList<StudentModel> getAllStudents(){
-        return studentService.getAllStudents();
+        return service.getAllStudents();
     }
 
-    @PostMapping
+    @PostMapping()
     public StudentModel saveStudent(@RequestBody StudentModel student){
-        return studentService.saveStudent(student);
+        return service.saveStudent(student);
     }
 
-    @GetMapping("/{id}")
-    public Optional<StudentModel> findById(@PathVariable Long id){
-        return studentService.findById(id);
-    }
-
-    @PutMapping
-    public StudentModel editStudent(StudentModel studentModel){
-        return studentService.saveStudent(studentModel);
+    @PutMapping()
+    public StudentModel editStudent(@RequestBody StudentModel student){
+        return service.editStudent(student);
     }
 
 
-    @DeleteMapping("/{id}")
-    public String deleteStudentById(@PathVariable Long id){
-        return studentService.deleteStudent(id);
+    @GetMapping("/findStudentById/{id}")
+    public Optional<StudentModel> findStudentById(@PathVariable Long id){
+        return service.findStudentById(id);
     }
 
-    //search by code
-    @GetMapping("/{code}")//localhost:8080/students/{code}
-    public Optional<StudentModel> findByCode(@RequestParam("code")String code){
-        return studentService.findByCode(code);
+    @GetMapping("/findStudentByCode/{code}")
+    public Optional<ArrayList<StudentModel>> finStudentByCode(@PathVariable String code){
+        return service.findStudentByCode(code);
     }
-    //search by name
-    //@GetMapping("/{name}")//localhost:8080/students/{name}
-    //public ArrayList<StudentModel> findByName(@RequestParam("name")String name){
-    //    return studentService.findByName(name);
-    //}
+
+
+    @GetMapping("/findStudentByName/{name}")
+    public Optional<ArrayList<StudentModel>> finStudentByName(@PathVariable String name){
+        return service.findStudentByName(name);
+    }
+    @DeleteMapping("/delete-student-by-id")
+    public String deleteStudentById(@RequestParam("id") Long id){
+        return service.deleteStudentById(id);
+    }
 
 
 }

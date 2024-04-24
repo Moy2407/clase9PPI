@@ -11,42 +11,49 @@ import java.util.Optional;
 @Service
 public class StudentService {
     @Autowired
-    StudentRepository studentRepository;
-    public StudentModel saveStudent(StudentModel studentModel){
-        //call studentById
-        if(studentRepository.findStudentModelByCode(studentModel.getCode()).isEmpty()){
-            return studentRepository.save(studentModel);
-        } else{
+    StudentRepository repository;
+    public StudentModel saveStudent(StudentModel student){
+        if(repository.findStudentModelByCode(student.getCode()).toString().equals("Optional[[]]")){
+            return repository.save(student);
+        }else{
+            //retornar un error de repetido
             StudentModel studentError = new StudentModel();
             studentError.setId(-1L);
             return studentError;
         }
 
+
+
     }
 
     public ArrayList<StudentModel> getAllStudents(){
-        return (ArrayList<StudentModel>) studentRepository.findAll();
+        return (ArrayList<StudentModel>) repository.findAll();
     }
 
-    public Optional<StudentModel> findById(Long id){
-        return studentRepository.findById(id);
+    public Optional<StudentModel> findStudentById(Long id){
+        return repository.findById(id);
     }
 
-    public String deleteStudent(Long id){
-        Optional<StudentModel> respuesta = studentRepository.findById(id);
-        if(respuesta.isPresent()){
-            studentRepository.deleteById(id);
+
+
+    public StudentModel editStudent(StudentModel student){
+        return repository.save(student);
+    }
+
+    public String deleteStudentById(Long id){
+
+        if(findStudentById(id).isPresent()){
+            repository.deleteById(id);
             return "student deleted successfully";
-        }else{
-            return "student not found with id";
+        }else {
+            return "student with id="+ id+ " not foud";
         }
     }
 
-    public Optional<StudentModel> findByCode(String code){
-        return studentRepository.findByCode(code);
+    public Optional<ArrayList<StudentModel>> findStudentByCode(String code){
+        return repository.findStudentModelByCode(code);
     }
-
-    public StudentModel editById(StudentModel studentModel){
-        return studentRepository.save(studentModel);
+    public Optional<ArrayList<StudentModel>> findStudentByName(String name){
+        return repository.findStudentModelByName(name);
     }
 }
